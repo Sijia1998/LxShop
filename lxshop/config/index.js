@@ -17,7 +17,14 @@ module.exports = {
         pathRewrite: {
           '^/api': '/'  //重写接口
         }
-      }
+      },
+      // '/goods/addCart':{
+      //   target: 'http://localhost:3000/',  // 通过本地服务器将你的请求转发到这个地址
+      //   changeOrigin: true,  //是否跨域
+      //   pathRewrite: {
+      //     '^/api': '/'  //重写接口
+      //   }
+      // },
     },
 
     // Various Dev Server settings
