@@ -1223,6 +1223,7 @@ html {
 
 .md-modal-transition.md-show {
   visibility: visible;
+  /* display: block; */
 }
 
 .md-modal-transition.md-show .md-modal-inner {

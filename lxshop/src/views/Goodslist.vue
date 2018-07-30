@@ -10,7 +10,9 @@
                     <span class="sortby">Sort by:</span>
                     <a href="javascript:;" class="default cur">Default</a>
                     <a @click="sortGoods" href="javascript:;" class="price">Price
-                        <span>↑</span>
+                        <span class="icon-arrow-short" :class="{'sort-up':!sortFlag}">
+                            ↓
+                        </span>
                     </a>
                     <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Filter by</a>
                 </div>
@@ -53,27 +55,72 @@
                 </div>
             </div>
         </div>
+        <div class="md-modal modal-msg md-modal-transition" :class="{'md-show':mdShow}">
+            <div class="md-modal-inner">
+                <div class="md-top">
+                    <div class="md-title">Login in</div>
+                    <button class="md-close">Close</button>
+                </div>
+                <div class="md-content">
+                    <div class="confirm-tips">
+                        <div class="error-wrap">
+                            <!---->
+                        </div>
+                        <ul>
+                            <li class="regi_form_input">
+                                <i class="icon IconPeople"></i> <input type="text" tabindex="1" name="loginname" placeholder="User Name" data-type="loginname" class="regi_login_input regi_login_input_left"></li>
+                            <li class="regi_form_input noMargin">
+                                <i class="icon IconPwd"></i> <input type="password" tabindex="2" name="password" placeholder="Password" class="regi_login_input regi_login_input_left login-input-no input_text"></li>
+                        </ul>
+                    </div>
+                    <div class="login-wrap">
+                        <a href="javascript:;" class="btn-login">登 录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
+        <model :mdShow="mdShow" v-on:close="closeModel">
+            <p slot="message">
+                请先登录，否则无法加入到购物车中
+            </p>
+            <div slot="btnGroup">
+                <a class="btn btn--m" href="javascript:;" @click="mdShow = false">关闭</a>
+            </div>
+        </model>
+        <model :mdShow="mdShowCart" v-on:close="closeModel">
+            <p slot="message">
+
+                <svg class="icon-status-ok">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-status-ok"></use>
+                </svg>
+                <span>加入购物车成功！</span>
+            </p>
+            <div slot="btnGroup">
+                <a class="btn btn--m" href="javascript:;" @click="mdShowCart = false">继续购物</a>
+                <router-link class="btn btn--m" href="javascript:;" to="/cart">查看购物车</router-link>
+            </div>
+        </model>
         <nav-footer></nav-footer>
     </div>
 </template>
 
 <script>
 import './../assets/css/base.css'
-import './../assets/css/checkout.css'
-import './../assets/css/login.css'
 import './../assets/css/product.css'
 
 import NavHeader from './../components/NavHeader'
 import NavFooter from './../components/NavFooter'
 import NavBread from './../components/NavBread'
+import Model from './../components/Model'
 import axios from 'axios'
 
 export default {
     components: {
         NavHeader,
         NavFooter,
-        NavBread
+        NavBread,
+        Model
     },
     props: {
 
@@ -82,6 +129,9 @@ export default {
     //vue官方不允许组件之间状态进行共享
     data() {
         return {
+            mdShowCart:false,
+            mdShow: false,
+            trans: true,
             loading: false,
             goodsList: [],
             priceFilter: [
@@ -105,7 +155,7 @@ export default {
             priceChecked: 'all',
             filterBy: false,
             overLayFlag: false,
-            sortFlage: true,
+            sortFlag: true,
             page: 1,
             pageSize: 8,
             busy: true
@@ -119,18 +169,18 @@ export default {
             let param = {
                 page: this.page,
                 pageSize: this.pageSize,
-                sort: this.sortFlage ? 1 : -1,
+                sort: this.sortFlag ? 1 : -1,
                 priceLevel: this.priceChecked
             }
             this.loading = true;
-            axios.get("/goods", {
+            axios.get("/goods/list", {
                 params: param
             })
                 .then((res) => {
                     this.loading = false;
                     let goodsData = res.data.result.list
-                    console.log(res);
-                    console.log(res.data.result.list);
+                    // console.log(res);
+                    // console.log(res.data.result.list);
                     if (res.data.status == "0") {
                         if (flag) {
                             this.goodsList = this.goodsList.concat(goodsData)
@@ -150,9 +200,10 @@ export default {
                 })
         },
         sortGoods() {
-            this.sortFlage = !this.sortFlage;
+            this.sortFlag = !this.sortFlag;
             this.page = 1;
             this.getGoodsList();
+            this.trans = !trans
         },
         showFilterPop() {
             this.filterBy = true;
@@ -176,38 +227,24 @@ export default {
             }, 500);
         },
         addCart(productId) {
-            // let productId = product_Id.toString()
-            // axios({
-            //     url: '/goods/addCart',
-            //     method: 'post',
-            //     headers: {
-            //         'Content-Type': 'application/x-www-form-urlencoded'
-            //     },
-            //     params:{
-            //         productId: productId
-            //     }
-            // })
-            // .then((res)=>{
-            //     if(res.data.status == 0){
-            //         alert("加入成功")
-            //     }else{
-            //         alert("msg:"+res.data.msg)
-            //     }
-            // })
-
             axios.post("/goods/addCart", {
                 productId: productId
             }, )
                 .then((res) => {
-                    console.log(res.data.status);
-                    
-                    if (res.data.status == 1) {
-                        alert("加入成功")
+                    // console.log(res.data.status);
+                    if (res.data.status == 0) {
+                        this.mdShowCart = true;
+
                     } else {
-                        alert("msg：" + res.msg)
+                        this.mdShow = true
                     }
                 })
+        },
+        closeModel() {
+            this.mdShow = false;
+            this.mdShowCart = false
         }
+
     }
 }
 </script>

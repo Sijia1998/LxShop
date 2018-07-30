@@ -29,7 +29,31 @@
                 </div>
             </div>
         </div>
-        
+        <div class="md-modal modal-msg md-modal-transition" :class="{'md-show':loginModelFlag}">
+            <div class="md-modal-inner">
+                <div class="md-top">
+                    <div class="md-title">Login in</div>
+                    <button class="md-close" @click="loginModelFlag=false">Close</button>
+                </div>
+                <div class="md-content">
+                    <div class="confirm-tips">
+                        <div class="error-wrap">
+                            <span class="error error-show" v-show="errorTip">用户名或者密码错误</span>
+                        </div>
+                        <ul>
+                            <li class="regi_form_input" >
+                                <i class="icon IconPeople"></i> <input type="text" tabindex="1" v-model="userName" name="loginname" placeholder="User Name" data-type="loginname" class="regi_login_input regi_login_input_left"></li>
+                            <li class="regi_form_input noMargin" >
+                                <i class="icon IconPwd"></i> <input type="password" tabindex="2" v-model="userPwd" name="password" placeholder="Password" class="regi_login_input regi_login_input_left login-input-no input_text"></li>
+                        </ul>
+                    </div>
+                    <div class="login-wrap">
+                        <a href="javascript:;" class="btn-login" @click="login">登 录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="md-overlay" v-show="loginModelFlag" @click="loginModelFlag=false"></div>
     </header>
 </template>
 <script>
@@ -46,22 +70,27 @@ export default {
             nickName: ''
         }
     },
-    mounted(){
+    mounted() {
         this.checkLogin()
     },
     methods: {
         login() {
+            console.log("账号："+this.userName);
+            console.log("密码："+this.userPwd);
+            
+            
             if (!this.userName || !this.userPwd) {
                 this.errorTip = true;
                 return;
             }
+            
+            
             axios.post('/users/login', {
                 userName: this.userName,
                 userPwd: this.userPwd
             })
                 .then((res) => {
                     // console.log(res);
-
                     let data = res.data;
                     if (data.status == "0") {
                         this.errorTip = false;
@@ -74,19 +103,19 @@ export default {
         },
         logOut() {
             axios.post("/users/logout")
-            .then((res) =>{
-                if(res.data.status == "0"){
-                    this.nickName = ''
-                }
-            })
+                .then((res) => {
+                    if (res.data.status == "0") {
+                        this.nickName = ''
+                    }
+                })
         },
         checkLogin() {
             axios.get('/users/checkLogin')
                 .then((res) => {
-                    
+
                     let data = res.data;
                     console.log(data);
-                    if(data.status == "0"){
+                    if (data.status == "0") {
                         this.nickName = data.result;
                     }
                 })
