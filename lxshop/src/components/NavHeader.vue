@@ -41,10 +41,12 @@
                             <span class="error error-show" v-show="errorTip">用户名或者密码错误</span>
                         </div>
                         <ul>
-                            <li class="regi_form_input" >
-                                <i class="icon IconPeople"></i> <input type="text" tabindex="1" v-model="userName" name="loginname" placeholder="User Name" data-type="loginname" class="regi_login_input regi_login_input_left"></li>
-                            <li class="regi_form_input noMargin" >
-                                <i class="icon IconPwd"></i> <input type="password" tabindex="2" v-model="userPwd" name="password" placeholder="Password" class="regi_login_input regi_login_input_left login-input-no input_text"></li>
+                            <li class="regi_form_input">
+                                <i class="icon IconPeople"></i>
+                                <input type="text" tabindex="1" v-model="userName" name="loginname" placeholder="User Name" data-type="loginname" class="regi_login_input regi_login_input_left"></li>
+                            <li class="regi_form_input noMargin">
+                                <i class="icon IconPwd"></i>
+                                <input type="password" tabindex="2" @keyup.enter="login" v-model="userPwd" name="password" placeholder="Password" class="regi_login_input regi_login_input_left login-input-no input_text"></li>
                         </ul>
                     </div>
                     <div class="login-wrap">
@@ -75,16 +77,16 @@ export default {
     },
     methods: {
         login() {
-            console.log("账号："+this.userName);
-            console.log("密码："+this.userPwd);
-            
-            
+            console.log("账号：" + this.userName);
+            console.log("密码：" + this.userPwd);
+
+
             if (!this.userName || !this.userPwd) {
                 this.errorTip = true;
                 return;
             }
-            
-            
+
+
             axios.post('/users/login', {
                 userName: this.userName,
                 userPwd: this.userPwd

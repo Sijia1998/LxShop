@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   "userName": String,
   "userPwd": String,
   "orderList": Array,
+  // "cartList":Array,
   "cartList": [{
     "productId": String,
     "productName": String,
@@ -23,4 +24,4 @@ const userSchema = new mongoose.Schema({
   }]
 })
 
-module.exports = mongoose.model("user", userSchema, "users")
+module.exports = mongoose.model("user", userSchema,"users")

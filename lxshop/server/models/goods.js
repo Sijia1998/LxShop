@@ -7,9 +7,9 @@ const productSchema = new Schema({
   "productName": String,
   "salePrice": Number,
   "productImage": String,
-  "productUrl": String
+  "productUrl": String,
+  "checked": Number,
+  "productNum": String
 });
 
-module.exports = mongoose.model('Good',productSchema);//模型
-
-
+module.exports = mongoose.model('Good', productSchema); //模型

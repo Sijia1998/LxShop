@@ -14,28 +14,49 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
+//设置模板引擎
 app.set('views', path.join(__dirname, 'views/'));  
-// app.engine('.html', require('ejs').renderFile); 
 app.engine('.html',ejs.__express); 
 app.set('view engine', 'html');  
 
+
+//使用中间件
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use(function(req,res,next){
+  if(req.cookies.userId){
+    next()
+  }else{
+    console.log("path:"+req.path);
+    if(req.originalUrl == '/users/login' || req.originalUrl == '/users/logout' || req.path == '/goods/list'){
+      next()
+    }else{
+      res.json({
+        status:'10001',
+        msg:'您当前未登录',
+        result:''
+      })
+    }
+  }
+})
+
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/goods',goodsRouter)
 
 
-// catch 404 and forward to error handler
+// catch 404 and forward to error handler  捕获404
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// error handler  捕获error
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;

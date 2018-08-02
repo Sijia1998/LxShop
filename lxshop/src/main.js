@@ -6,6 +6,12 @@ import router from './router'
 import VueLazyLoad from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
 
+//按需引用iview
+import 'iview/dist/styles/iview.css'//按需引用也需要引入css样式文件
+import {Icon} from 'iview'
+
+Vue.component('Icon',Icon)
+
 Vue.config.productionTip = false
 
 Vue.use(infiniteScroll)

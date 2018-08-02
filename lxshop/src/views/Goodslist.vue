@@ -98,7 +98,7 @@
             </p>
             <div slot="btnGroup">
                 <a class="btn btn--m" href="javascript:;" @click="mdShowCart = false">继续购物</a>
-                <router-link class="btn btn--m" href="javascript:;" to="/cart">查看购物车</router-link>
+                <router-link class="btn btn--m" href="javascript:;" to="/Cart">查看购物车</router-link>
             </div>
         </model>
         <nav-footer></nav-footer>
