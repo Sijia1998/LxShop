@@ -1,6 +1,6 @@
 # lxshop
 
-> 此分支使用了Vuex进行状态管理
+> 项目部署在阿里云
 
 ## Build Setup
 
