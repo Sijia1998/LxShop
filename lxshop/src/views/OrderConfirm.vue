@@ -66,30 +66,30 @@
                             </ul>
                         </div>
                         <ul class="cart-item-list">
-                            <li v-for="item in OrderList">
+                            <li v-for="item in cartList" v-if="item.checked == '1' ">
                                 <div class="cart-tab-1">
                                     <div class="cart-item-pic">
-                                        <img src="" alt="">
+                                        <img :src="'/static/'+item.productImage" :alt="item.productName">
                                     </div>
                                     <div class="cart-item-title">
-                                        <div class="item-name">{{}}</div>
+                                        <div class="item-name">{{item.productName}}</div>
                                     </div>
                                 </div>
                                 <div class="cart-tab-2">
-                                    <div class="item-price">2499</div>
+                                    <div class="item-price">{{item.salePrice | currency()}}</div>
                                 </div>
                                 <div class="cart-tab-3">
                                     <div class="item-quantity">
                                         <div class="select-self">
                                             <div class="select-self-area">
-                                                <span class="select-ipt">×1</span>
+                                                <span class="select-ipt">×{{item.productNum}}</span>
                                             </div>
                                         </div>
                                         <div class="item-stock item-stock-no">In Stock</div>
                                     </div>
                                 </div>
                                 <div class="cart-tab-4">
-                                    <div class="item-price-total">{{item.orderTotal}}</div>
+                                    <div class="item-price-total"> {{(item.productNum*item.salePrice) | currency()}}</div>
                                 </div>
                             </li>
                         </ul>
@@ -102,23 +102,23 @@
                         <ul>
                             <li>
                                 <span>Item subtotal:</span>
-                                <span>$2499</span>
+                                <span> {{subTotal | currency()}}</span>
                             </li>
                             <li>
                                 <span>Shipping:</span>
-                                <span>$100</span>
+                                <span> {{Shipping | currency()}}</span>
                             </li>
                             <li>
                                 <span>Discount:</span>
-                                <span>$0</span>
+                                <span> {{discount | currency()}}</span>
                             </li>
                             <li>
                                 <span>Tax:</span>
-                                <span>$400</span>
+                                <span> {{tax | currency()}}</span>
                             </li>
                             <li class="order-total-price">
                                 <span>Order total:</span>
-                                <span>$1999</span>
+                                <span> {{orderTotal | currency()}}</span>
                             </li>
                         </ul>
                     </div>
@@ -126,10 +126,11 @@
 
                 <div class="order-foot-wrap">
                     <div class="prev-btn-wrap">
-                        <button class="btn btn--m">Previous</button>
+                        <router-link class="btn btn--m" to="/address">Previous</router-link>
                     </div>
                     <div class="next-btn-wrap">
-                        <button class="btn btn--m btn--red">Proceed to payment</button>
+                        <!-- <router-link class="btn btn--m btn--red" @click="payMent">Proceed to payment</router-link> -->
+                        <button class="btn btn--m btn--red" @click="payMent">Proceed to payment</button>
                     </div>
                 </div>
             </div>
@@ -160,20 +161,51 @@ export default {
     props: {},
     data() {
         return {
-            OrderList:[]
+            Shipping: 100,
+            cartList: [],
+            discount: 200,
+            tax: 400,
+            orderTotal: 0,
+            subTotal: 0
         }
     },
-    watch: {},
     computed: {},
+    filters: {
+        currency: currency
+    },
     methods: {
         init() {
-            axios.get('/users/getOrderList')
+            axios.get('/users/cartList')
+                .then((res) => {
+                    let data = res.data;
+                    if (data.status == '0') {
+                        this.cartList = data.result;
+                        this.cartList.forEach((item) => {
+                            if (item.checked == '1') {
+                                this.subTotal += item.salePrice * item.productNum;
+                            }
+                        });
+                        this.orderTotal = this.subTotal + this.Shipping - this.discount + this.tax
+                    }
+                })
+        },
+        payMent(){
+            var addressId = this.$route.query.addressId;
+            axios.post('/users/payMent',{
+                addressId:addressId,
+                orderTotal:this.orderTotal
+            })
             .then((res)=>{
                 let data = res.data;
+                console.log(data);
+                
                 if(data.status == '0'){
-                    this.OrderList = data.result;
+                    // console.log("order created suc.");
+                    this.$router.push({
+                        path:'/orderSuccess?orderId='+data.result.orderId
+                    })
+                    
                 }
-                console.log(this.OrderList);
             })
         }
     },

@@ -65,7 +65,7 @@
                     <div class="addr-list-wrap">
                         <div class="addr-list">
                             <ul>
-                                <li class="" v-for="(item,index) in addressInfoFilter" @click="checkIndex=index" :class="{'check':checkIndex==index}">
+                                <li class="" v-for="(item,index) in addressInfoFilter" @click="checkIndex=index;selectedAddrId=item.addressId" :class="{'check':checkIndex==index}">
                                     <dl>
                                         <dt>{{item.userName}}</dt>
                                         <dd class="address">{{item.postCode}} {{item.streetName}}</dd>
@@ -137,33 +137,9 @@
                         </div>
                     </div>
                     <div class="next-btn-wrap">
-                        
-                        <router-link class="btn btn--m btn--red" to="/orderConfirm">Next</router-link>
+                        <router-link class="btn btn--m btn--red" :to="{path:'orderConfirm',query:{'addressId':selectedAddrId}}">Next</router-link>
                     </div>
                 </div>
-            </div>
-            <div>
-                <div class="md-modal modal-msg md-modal-transition">
-                    <div class="md-modal-inner">
-                        <div class="md-top">
-                            <button class="md-close">Close</button>
-                        </div>
-                        <div class="md-content">
-                            <div class="confirm-tips">
-                                <p>
-                                    您是否确认要删除此地址?
-                                </p>
-                            </div>
-                            <div class="btn-wrap">
-                                <div>
-                                    <a href="javascript:;" class="btn btn--m">确认</a>
-                                    <a href="javascript:;" class="btn btn--m btn--red">取消</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!---->
             </div>
             <div>
                 <div class="md-modal modal-msg md-modal-transition">
@@ -225,8 +201,9 @@ export default {
             limit: 3,
             addressInfo: [],
             checkIndex: 0,
-            isMdShow:false,
-            addressId:''
+            isMdShow: false,
+            addressId: '',
+            selectedAddrId:''
         }
     },
     computed: {
@@ -245,7 +222,7 @@ export default {
                     }
                 })
         },
-        delAddConfirm(item){
+        delAddConfirm(item) {
             this.isMdShow = true;
             this.addressId = item.addressId;
         },
@@ -289,7 +266,7 @@ export default {
                     }
                 })
         },
-        closeModel(){
+        closeModel() {
             this.isMdShow = false;
         }
 

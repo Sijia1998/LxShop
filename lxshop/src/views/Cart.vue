@@ -139,7 +139,6 @@ export default {
             productId: '',
         }
     },
-    watch: {},
     computed: {
         checkAllFlag() {
             return this.checkedCount == this.cartList.length;
