@@ -1,24 +1,14 @@
-# lxshop
+## 基于Vue2.0+MongoDB+Express4.x实现一个商城系统
+> 项目简介 ：包含添加购物车，支付等功能的商城系统
 
-* 此分支使用了Vuex进行状态管理
-* [个人博客地址](http://www.randycloud.xyz)
-``` bash
-# 项目部署在阿里云
-```
-## Build Setup
++ 项目技术选型（前后端分离开发）
+    + 前端：HTML、CSS、Javascript、Vue2.x、Vuex、Vue-Router
+    + 后端：Node.js
+    + 数据库：MongoDB
+    + 服务端部署：CentOS、nginx
 
-``` bash
-# install dependencies
-npm install
++ 开发人员
+    + 前端 ： 朱思佳
+    + 后端 ： 朱思佳
 
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
++ [项目仓库代码地址](https://sijia1998.github.io)
