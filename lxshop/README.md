@@ -2,6 +2,10 @@
 
 > 此分支使用了Vuex进行状态管理
 
+``` bash
+# 项目部署在阿里云
+```
+
 ## Build Setup
 
 ``` bash
