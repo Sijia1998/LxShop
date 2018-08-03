@@ -1,6 +1,6 @@
 # lxshop
 
-> A Vue.js project
+> 此分支使用了Vuex进行状态管理
 
 ## Build Setup
 
