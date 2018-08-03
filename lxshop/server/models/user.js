@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     "addressId": String,
     "userName": String,
     "streetName": String,
-    "postCode": String,
+    "postCode": Number,
     "tel": String,
     "isDefault": Boolean
   }]

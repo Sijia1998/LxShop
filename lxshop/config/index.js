@@ -21,7 +21,7 @@ module.exports = {
       '/goods/*':{ //  /*是通配符
         target: 'http://localhost:3000/',  // 通过本地服务器将你的请求转发到这个地址
       },
-      '/users/*':{
+      '/users/**':{
         target: 'http://localhost:3000/',  // 通过本地服务器将你的请求转发到这个地址
         changeOrigin: true,  //是否跨域
         pathRewrite: {

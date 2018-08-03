@@ -127,10 +127,9 @@ router.post('/addCart',(req,res,next)=>{
                   msg:err1.message
               })
             }else{
-              console.log("1111111111",document);
               if(document){
                 document.productNum = 1;
-                // document.checked = 1;
+                document.checked = 1;
                 userDoc.cartList.push(document);
                 userDoc.save((err2,doc2)=>{
                   if(err2){

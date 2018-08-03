@@ -254,8 +254,11 @@ html {
   height: 20px;
 }
 
-.addr-list li .addr-set-default {
-  display: none;
+.addr-list li .addr-set-default .addr-set-default-btn{
+  /* display: none; */
+  bottom: 18px;
+  left: 20px;
+  color: #ee7a23;
 }
 
 .addr-list li .addr-set-default, .addr-list li .addr-default {

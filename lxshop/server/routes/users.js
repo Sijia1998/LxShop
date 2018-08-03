@@ -103,6 +103,8 @@ router.get('/cartList', (req, res, next) => {
   })
 })
 
+
+//购物车商品删除接口
 router.post('/cartdel', (req, res, next) => {
   console.log(req.body);
   let userId = req.cookies.userId;
@@ -131,6 +133,194 @@ router.post('/cartdel', (req, res, next) => {
       })
     }
   })
+})
 
+
+//修改商品数量
+router.post('/carEdit', (req, res, next) => {
+  let userId = req.cookies.userId;
+  let productId = req.body.productId;
+  let productNum = req.body.productNum;
+  let checked = req.body.checked;
+  console.log(checked + typeof (checked));
+
+  User.update({ //查询条件
+    'userId': userId,
+    'cartList.productId': productId,
+  }, { //需要修改的数据
+    'cartList.$.productNum': productNum,
+    'cartList.$.checked': checked
+  }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      })
+    } else {
+      res.json({
+        status: '0',
+        msg: '',
+        result: 'success'
+      })
+    }
+  })
+})
+
+//全选和取消全选
+router.post('/editCheckAll', function (req, res, next) {
+  let userId = req.cookies.userId;
+  let checkAll = req.body.checkAll ? '1' : '0';
+  console.log(typeof (checkAll));
+  User.findOne({
+    userId: userId
+  }, function (err, user) {
+    if (err) {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      });
+    } else {
+      if (user) {
+        user.cartList.forEach((item) => {
+          item.checked = checkAll;
+        })
+        user.save(function (err1, doc) {
+          if (err1) {
+            res.json({
+              status: '1',
+              msg: err1,
+              message,
+              result: ''
+            });
+          } else {
+            res.json({
+              status: '0',
+              msg: '',
+              result: 'suc'
+            });
+          }
+        })
+      }
+    }
+  })
+})
+
+//获取地址接口
+router.get('/addressList', (req, res, next) => {
+  let userId = req.cookies.userId;
+  User.findOne({
+    userId: userId
+  }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      });
+    } else {
+      res.json({
+        status: '0',
+        msg: '',
+        result: doc.addressList
+      })
+    }
+  })
+})
+
+//删除地址信息接口
+router.post('/removeAdd', (req, res, next) => {
+  let userId = req.cookies.userId;
+  let addressId = req.body.addressId;
+  User.update({
+    userId: userId,
+  }, {
+    $pull: {
+      'addressList': {
+        'addressId': addressId
+      }
+    }
+  }, (err, doc) => {
+    if (err) {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      })
+    } else {
+      res.json({
+        status: '0',
+        msg: '',
+        result: 'success'
+      })
+    }
+  })
+})
+
+//设置默认地址接口
+router.post('/setDefault', (req, res, next) => {
+  let userId = req.cookies.userId;
+  let addressId = req.body.addressId;
+  let isDefault = req.body.isDefault;
+  User.findOne({
+    userId: userId,
+  }, (err, doc) => {
+    if (!addressId) {
+      res.json({
+        status: '1003',
+        msg: 'addressId is null',
+        result: ''
+      })
+    } else {
+      let addressList = doc.addressList;
+      addressList.forEach((item) => {
+        if (item.addressId == addressId) {
+          item.isDefault = true;
+        } else {
+          item.isDefault = false;
+        }
+      });
+      console.log(addressList);
+
+      doc.save((err1, doc1) => {
+        if (err1) {
+          res.json({
+            status: '1',
+            msg: err.message,
+            result: ''
+          })
+        } else {
+          res.json({
+            status: '0',
+            msg: '',
+            result: 'success'
+          })
+        }
+      })
+    }
+  })
+})
+
+//获取订单信息
+router.get('/getOrderList', (req, res, next) => {
+  let userId = req.cookies.userId;
+  User.findOne({
+    userId: userId
+  }, (err, doc) => {
+    if(err){
+      res.json({
+        status:'1',
+        msg:err.message,
+        result:''
+      })
+    }else{
+      res.json({
+        status:'0',
+        msg:'',
+        result:doc.orderList
+      })
+    }
+  })
 })
 module.exports = router;
