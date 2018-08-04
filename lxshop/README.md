@@ -3,6 +3,7 @@
 
 + 项目技术选型（前后端分离开发）
     + 前端：HTML、CSS、Javascript、Vue2.x、Vuex、Vue-Router
+    + 组件：按需引入 iView 的 Icon 图标
     + 后端：Node.js
     + 数据库：MongoDB
     + 服务端部署：CentOS、nginx
@@ -11,5 +12,5 @@
     + 前端 ： 朱思佳
     + 后端 ： 朱思佳
 
-+ [项目仓库代码地址](https://github.com/Sijia1998/LxShop/)
++ [项目仓库代码地址](https://sijia1998.github.io)
 + [个人博客地址](https://sijia1998.github.io)
