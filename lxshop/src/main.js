@@ -19,14 +19,33 @@ Vue.config.productionTip = false
 Vue.filter("currency",currency)
 
 Vue.use(infiniteScroll)
-
+Vue.use(Vuex)
 Vue.use(VueLazyLoad,{
   loading:"/static/loading-svg/loading-bubbles.svg"
 })
+
+const store = new Vuex.Store({
+  //state是唯一数据源
+  state:{
+    nickName:'',
+    cartCount:0
+  },
+  //mutations用来改变状态
+  mutations:{
+    updateUserInfo(state,nickName){
+      state.nickName = nickName
+    },
+    updateCartCount(state,cartCount){
+      state.cartCount += cartCount
+    }
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

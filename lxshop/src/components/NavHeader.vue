@@ -16,11 +16,11 @@
             <div class="navbar-right-container" style="display: flex;">
                 <div class="navbar-menu-container">
                     <!--<a href="/" class="navbar-link">我的账户</a>-->
-                    <span class="navbar-link" v-text="nickName"></span>
+                    <span class="navbar-link" v-text="nickName" v-if="nickName"></span>
                     <a href="javascript:void(0)" class="navbar-link" @click="loginModelFlag=true" v-if="!nickName">Login</a>
                     <a href="javascript:void(0)" class="navbar-link" @click="logOut">Logout</a>
                     <div class="navbar-cart-container">
-                        <span class="navbar-cart-count"></span>
+                        <span class="navbar-cart-count">{{cartCount}}</span>
                         <a class="navbar-link navbar-cart-link" @click="linkToCart">
                             <svg class="navbar-cart-logo">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -70,35 +70,39 @@ export default {
             userPwd: '',
             errorTip: false,
             loginModelFlag: false,
-            nickName: ''
+        }
+    },
+    computed:{
+        nickName(){
+            return this.$store.state.nickName
+        },
+        cartCount(){
+            return this.$store.state.cartCount
         }
     },
     mounted() {
-        this.checkLogin()
+        this.checkLogin();
     },
     methods: {
         login() {
-            console.log("账号：" + this.userName);
-            console.log("密码：" + this.userPwd);
-
-
+            // console.log("账号：" + this.userName);
+            // console.log("密码：" + this.userPwd);
             if (!this.userName || !this.userPwd) {
                 this.errorTip = true;
                 return;
             }
-
-
             axios.post('/users/login', {
                 userName: this.userName,
                 userPwd: this.userPwd
             })
                 .then((res) => {
-                    // console.log(res);
                     let data = res.data;
+                    console.log(data);
                     if (data.status == "0") {
                         this.errorTip = false;
                         this.loginModelFlag = false;
-                        this.nickName = data.result.userName
+                        this.$store.commit("updateUserInfo",data.result.userName)
+                        this.getCartCount()
                     } else {
                         this.errorTip = true;
                     }
@@ -108,24 +112,37 @@ export default {
             axios.post("/users/logout")
                 .then((res) => {
                     if (res.data.status == "0") {
-                        this.nickName = ''
+                        this.$store.commit("updateUserInfo",'')
                     }
                 })
         },
         checkLogin() {
             axios.get('/users/checkLogin')
                 .then((res) => {
-
                     let data = res.data;
-                    console.log(data);
+                    let path = this.$route.pathname;
+                    // console.log(data);
                     if (data.status == "0") {
-                        this.nickName = data.result;
+                        this.$store.commit("updateUserInfo",data.result);
+                        this.getCartCount();
+                        this.loginModelFlag = false;
+                    }else{
+                        if(this.$route.path!='/'){
+                            this.$router.push('/')
+                        }
                     }
                 })
         },
         linkToCart() {
             this.$router.push({
                 path: '/cart'
+            })
+        },
+        getCartCount(){
+            axios.get('/users/getCartCount')
+            .then((res)=>{
+                let data = res.data;
+                this.$store.commit("updateCartCount",data.result)
             })
         }
     }

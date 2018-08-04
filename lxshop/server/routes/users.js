@@ -35,7 +35,6 @@ router.post('/login', (req, res, next) => {
 
         //存入session
         // req.session.user = doc;
-
         res.json({
           status: "0",
           msg: '',
@@ -78,6 +77,34 @@ router.get('/checkLogin', (req, res, next) => {
     })
   }
 })
+
+//获取购物车数量
+router.get('/getCartCount',(req,res,next)=>{
+  if(req.cookies && req.cookies.userId){
+    let userId = req.cookies.userId;
+    User.findOne({userId:userId},(err,doc)=>{
+      if(err){
+        res.json({
+          status: '1',
+          msg: err.message,
+          result: ''
+        })
+      }else{
+        let cartList = doc.cartList;
+        let cartCount = 0;
+        cartList.map((item)=>{
+          cartCount += parseInt(item.productNum);
+        })
+        res.json({
+          status:'0',
+          msg:'',
+          result:cartCount
+        })
+      }
+    })
+  }
+})
+
 
 //查询当前用户的购物车数据
 router.get('/cartList', (req, res, next) => {
