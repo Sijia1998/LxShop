@@ -12,4 +12,4 @@
     + 后端 ： 朱思佳
 
 + [项目仓库代码地址](https://github.com/Sijia1998/LxShop/)
-+ [个人博客地址](sijia1998.github.io)
++ [个人博客地址](https://sijia1998.github.io)
