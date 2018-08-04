@@ -11,4 +11,5 @@
     + 前端 ： 朱思佳
     + 后端 ： 朱思佳
 
-+ [项目仓库代码地址](https://sijia1998.github.io)
++ [项目仓库代码地址](https://github.com/Sijia1998/LxShop/)
++ [个人博客地址](sijia1998.github.io)
