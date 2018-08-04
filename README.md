@@ -3,6 +3,7 @@
 
 + 项目技术选型（前后端分离开发）
     + 前端：HTML、CSS、Javascript、Vue2.x、Vuex、Vue-Router
+    + 组件：按需引入 iView 的 Icon 图标
     + 后端：Node.js
     + 数据库：MongoDB
     + 服务端部署：CentOS、nginx
