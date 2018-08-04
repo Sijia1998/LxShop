@@ -6,7 +6,7 @@
     + 组件：按需引入 iView 的 Icon 图标
     + 后端：Node.js
     + 数据库：MongoDB
-    + 服务端部署：CentOS、nginx
+    + 服务端部署：CentOS、Nginx
 
 + 开发人员
     + 前端 ： 朱思佳
