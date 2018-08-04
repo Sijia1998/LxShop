@@ -20,7 +20,7 @@
                     <a href="javascript:void(0)" class="navbar-link" @click="loginModelFlag=true" v-if="!nickName">Login</a>
                     <a href="javascript:void(0)" class="navbar-link" @click="logOut">Logout</a>
                     <div class="navbar-cart-container">
-                        <span class="navbar-cart-count">{{cartCount}}</span>
+                        <span class="navbar-cart-count" v-if="cartCount>0">{{cartCount}}</span>
                         <a class="navbar-link navbar-cart-link" @click="linkToCart">
                             <svg class="navbar-cart-logo">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -62,6 +62,7 @@
 <script>
 import './../assets/css/login.css'
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
     data() {
@@ -73,12 +74,17 @@ export default {
         }
     },
     computed:{
-        nickName(){
-            return this.$store.state.nickName
-        },
-        cartCount(){
-            return this.$store.state.cartCount
-        }
+        //ES6解构运算
+        ...mapState(['nickName','cartCount']) //实现的效果与下面注释的代码相同
+
+        // nickName(){
+        //     return this.$store.state.nickName
+        // },
+        // cartCount(){
+        //     return this.$store.state.cartCount
+        // }
+        
+        
     },
     mounted() {
         this.checkLogin();
@@ -142,7 +148,7 @@ export default {
             axios.get('/users/getCartCount')
             .then((res)=>{
                 let data = res.data;
-                this.$store.commit("updateCartCount",data.result)
+                this.$store.commit("initCartCount",data.result)
             })
         }
     }

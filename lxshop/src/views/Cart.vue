@@ -59,7 +59,7 @@
                                 <div class="cart-tab-5">
                                     <div class="cart-item-opration">
                                         <!-- <input class="cart-btn" type="button" style="width: 70px;height: 30px;" value="删除"> -->
-                                        <a href="javascript:;" @click="delCartConfirm(item.productId)">
+                                        <a href="javascript:;" @click="delCartConfirm(item)">
                                             <Icon type="ios-trash" size="24" color="#ed1414" />
                                         </a>
                                     </div>
@@ -137,6 +137,7 @@ export default {
             cartList: [],
             modelConfirm: false,
             productId: '',
+            delItem:{}
         }
     },
     computed: {
@@ -170,24 +171,27 @@ export default {
             axios.get('/users/cartList')
                 .then((res) => {
                     let data = res.data;
-                    console.log(typeof (res.data.result[0].salePrice));
+                    // console.log(typeof (res.data.result[0].salePrice));
                     this.cartList = data.result;
                 })
         },
-
-        delCartConfirm(productId) {
+        delCartConfirm(item) {
             this.modelConfirm = true;
-            this.productId = productId;
+            this.delItem = item;
         },
         delCart() {
             axios.post('/users/cartdel', {
-                productId: this.productId
+                productId: this.delItem.productId
             })
                 .then((res) => {
-                    if (res.data.status == "0") {
-
+                    
+                    let shopNum = parseInt(this.delItem.productNum);
+                    console.log(typeof(shopNum));
+                    let data = res.data
+                    if (res.data.status == "0") {                       
                         this.modelConfirm = false;
                         this.init();
+                        this.$store.commit("updateCartCount",-shopNum);
                     }
                 })
         },
@@ -212,6 +216,13 @@ export default {
             })
                 .then((res) => {
                     let data = res.data;
+                    let num = 0;
+                    if(flag == 'add'){
+                        num = 1;
+                    }else if(flag == 'minu'){
+                        num = -1;
+                    }
+                    this.$store.commit("updateCartCount",num);
                 })
         },
         toggleCheckAll() {
