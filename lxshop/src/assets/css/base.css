@@ -1239,6 +1239,9 @@ html {
   .md-modal {
     width: 300px !important;
   }
+  .md-title {
+    display: none;
+  }
 
   .md-modal.md-modal-fun .md-content {
     padding-top: 30px;
@@ -1261,10 +1264,10 @@ html {
   }
 
   .md-modal .confirm-tips {
-    display: -webkit-box;
+    /* display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
+    display: -ms-flexbox; */
+    /* display: flex; */
     min-height: 90px;
     -ms-flex-align: center;
     -webkit-box-align: center;
